@@ -38,7 +38,7 @@ class dataframe_ext:
     def __init__(self, dataframe, vars_type, discrete_vars_list = None, clean_bool = False, rescale_bool = False):
         #the data is stored
         if type(dataframe) == pd.core.frame.DataFrame:
-            self.df = dataframe
+            self.df = dataframe.dropna()
         else: 
             sys.exit("Please specify a valid dataframe")
             
