@@ -35,7 +35,7 @@ class dataframe_ext:
     # are actually blank until complete     #
     # is called                             #
     #########################################
-    def __init__(self, dataframe, vars_type, discrete_vars_list = None, clean = False, rescale = False):
+    def __init__(self, dataframe, vars_type, discrete_vars_list = None, clean_bool = False, rescale_bool = False):
         #the data is stored
         if type(dataframe) == pd.core.frame.DataFrame:
             self.df = dataframe
@@ -45,7 +45,7 @@ class dataframe_ext:
         #first we set the list of object_vars
         self.object_vars = [x for x in self.df.columns if self.df[x].dtype == "object"]
         #then a little control over inferred types
-        if len(self.object_vars) != 0 & vars_type == "continous":
+        if len(self.object_vars) != 0 and vars_type == "continous":
             sys.exit("vars_type is set to continous but object type columns are present.\
                       If there are non numerical variables in the dataset please set \
                       vars_type = mixed, otherwise make sure that dtypes in the \
@@ -54,43 +54,39 @@ class dataframe_ext:
         #according to vars_type, every parameter is set
         if vars_type not in ["continous", "mixed", "discrete"]:
             sys.exit("Please specify a valid vars_type: [continous, discrete, mixed]")
+
         elif vars_type == "continous":
-            self.TYPE = "continous"
+            self.TYPE = vars_type
             self.dist = self.euclidean_distance 
             self.discrete_vars = []
             self.continous_vars = self.df.drop(columns = self.object_vars)
-            if clean == True:
-                self.clean()
-            if rescale == True:
-                self.rescale()
+            self.clean_and_rescale(clean_bool, rescale_bool)
+
         elif vars_type == "discrete":
-            self.TYPE = "discrete"
+            self.TYPE = vars_type
             self.dist = self.hamming_distance 
             self.discrete_vars = self.df.drop(columns = self.object_vars) 
             self.continous_vars = []
-            if clean == True:
-                self.clean()
-            if rescale == True:
-                self.rescale()
+            self.clean_and_rescale(clean_bool, rescale_bool)
+
         elif vars_type == "mixed":
-            self.TYPE = "mixed"
+            self.TYPE = vars_type
             self.dist = self.hamming_distance
             if type(discrete_vars_list) != list:
                 sys.exit("Please provide a valid discrete variable list")
             else:
                 try: 
-                    _ = self.dataframe[discrete_vars_list]
+                    _ = self.df[discrete_vars_list]
                 except:
                     sys.exit("Columns in discrete_var_list are not in the Dataframe")
                 self.discrete_vars = discrete_vars_list
-                self.continous_vars = (self.dataframe
-                                           .drop(columns = [self.discrete_vars, self.object_vars])
-                                           .columns)
-                if clean == True:
-                    self.clean()
-                if rescale == True:
-                    self.rescale()
-                self[self.continous_vars].discretize()
+                self.continous_vars = (
+                                        self.df
+                                            .drop(columns = self.discrete_vars + self.object_vars)
+                                            .columns
+                                      )
+                self.clean_and_rescale(clean_bool, rescale_bool)
+                self.discretize()
         
         #all the other parameters are set to None
         self.D = None
@@ -115,8 +111,11 @@ class dataframe_ext:
     # the interval mean +- 3*devstd         #
     #########################################
     def clean(self):
-        ZS = stats.zscore(self.df[self.continous_vars])
-        self.df = self.df[(np.abs(ZS) < 3).all(axis = 1)]
+        object_df = self.df[self.object_vars]
+        numeric_df = self.df.drop(columns = self.object_vars)
+        ZS = stats.zscore(numeric_df)
+        numeric_df = numeric_df[(np.abs(ZS) < 3).all(axis = 1)]
+        self.df = numeric_df.join(object_df)
         return self
     
     #########################################
@@ -126,10 +125,25 @@ class dataframe_ext:
     #########################################
     def rescale(self):
         scaler = preprocessing.MinMaxScaler()
-        self.df = pd.DataFrame(
-                                scaler.fit_transform(self.df),
-                                columns = self.df.columns
-                              )
+        object_df = self.df[self.object_vars]
+        numeric_df = self.df.drop(columns = self.object_vars)
+        numeric_df = pd.DataFrame(
+                                  scaler.fit_transform(numeric_df),
+                                  columns = numeric_df.columns
+                                 )
+        self.df = numeric_df.join(object_df)
+        return self
+    
+    #########################################
+    # CLEAN AND RESCALE - small utility     #
+    # function that performs clean and      #
+    # rescale if the parameters are True    #
+    #########################################
+    def clean_and_rescale(self, clean_bool = True, rescale_bool = True):
+        if clean_bool == True:
+            self.clean()
+        if rescale_bool == True:
+            self.rescale()
         return self
     
     #########################################
@@ -141,10 +155,13 @@ class dataframe_ext:
         disc = preprocessing.KBinsDiscretizer(n_bins = 10, 
                                               encode = "ordinal", 
                                               strategy = "uniform")
-        self.df = pd.DataFrame(
-                               disc.fit_transform(self.df), 
-                               columns = self.df.columns
-                              )
+        continous_df = self.df[self.continous_vars]
+        not_continous_df = self.df.drop(columns = self.continous_vars)
+        continous_df = pd.DataFrame(
+                                        disc.fit_transform(continous_df), 
+                                        columns = continous_df.columns
+                                   )
+        self.df = continous_df.join(not_continous_df)
         return self
     
 
@@ -223,7 +240,10 @@ class dataframe_ext:
     #########################################
     @staticmethod
     def sim_to_entropy(sv):
-        return - ((sv * math.log2(sv)) + ((1-sv)*math.log2(1-sv)))
+        try:
+            return - ((sv * math.log2(sv)) + ((1-sv)*math.log2(1-sv)))
+        except: 
+            return float(0)
             
     
     #########################################
