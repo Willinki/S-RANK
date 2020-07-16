@@ -8,11 +8,15 @@ A basic implementation of the Scalable RANK Algorithm, for feature selection in 
 
 All the theoretical details are presented inside the article above. We implemented the RANK and SRANK algorithm following its indications.
 
+## Dependencies
+* ```pandas v1.0.1```
+* ```scikit-learn v0.2```
+
 ## Usage
 
-In order to use the algorithm, the repository must be first cloned. 
+In order to use the algorithm, install the module with:
   ``` 
-  git clone https://github.com/Willinki/S-RANK.git 
+  pip install S-RANK
   ```
 
 Then, to import:
