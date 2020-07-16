@@ -27,7 +27,7 @@ Then, in order to use the algorithm:
   ```
   
 __Arguments:__
-* ```df_big```: the whole data. It has to be a pandas.Dataframe object. Please make sure that all variable dtypes are inferred correctly. It is important to have numeric variables and non-numeric variables (dtype: object) inferred correctly. Up to now, the algorithm is able to 
+* ```df_big```: the whole data. It has to be a pandas.Dataframe object. Please make sure that all variable dtypes are inferred correctly. It is important to have numeric variables and non-numeric variables (dtype: object) inferred correctly. Up to now, the algorithm is able to handle numeric and object data, any other type (like datetimes) will not be treated. It is recommended to remove any non-numerical and non-object feature.
 * ```vars_type``` :  the type of data in the dataframe. String that can take 3 values: ```continous``` if all the variables have continous numerical values. ```discrete``` if all the variables are categorical (encoded as string or number makes no difference), ```mixed``` if there's both.
 * ```discrete_vars_list``` : needs to be set only if ```vars_type = "mixed" ```. It is a list containing the names of the categorical variable in the dataframe. If ```vars_type = "continous"``` or ```discrete``` this must be set to None.
 * ```clean_bool``` if this option is set to true, outliers removal is performed. Any instance (row) is identified as an outlier if any of its feature lays outside the interval M +- 3 * s where M is the mean value of the feature and s is its standard deviation.
