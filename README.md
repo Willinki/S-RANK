@@ -39,4 +39,4 @@ __Arguments:__
 Dash, M., & Liu, H. (2000). Feature selection for clustering. In Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics) (Vol. 1805, pp. 110-121). (Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics); Vol. 1805). Springer Verlag. 
 
 ### Note:
-The algorithm has ben used is a small data science project and has given great results. However, i'm still testing its full capabilities.
+The algorithm has been used is a small data science project and has given great results. However, i'm still testing its full capabilities.
