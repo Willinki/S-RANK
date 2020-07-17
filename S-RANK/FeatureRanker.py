@@ -97,6 +97,6 @@ class SRANK:
         #setting the class attributes
         self.info = final_results_info
         self.rank = final_results_rank
-        #an object of type Ranking is returned
+  
         return self
                        
