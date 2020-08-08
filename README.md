@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/github/license/Willinki/S-RANK?color=blue&style=flat-square)
 ![](https://img.shields.io/pypi/v/S-RANK?color=green&style=flat-square)
-
+[![Downloads](https://pepy.tech/badge/s-rank)](https://pepy.tech/project/s-rank)
 A basic implementation of the Scalable RANK Algorithm, for feature selection in unsupervised learning problems, as described [in this article](https://www.public.asu.edu/%7Ehuanliu/papers/pakdd00clu.pdf "Feature Selection for Clustering") by Manoranjan Dash and Huan Liu.
 
 ## Description
