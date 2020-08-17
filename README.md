@@ -8,7 +8,7 @@ A basic implementation of the Scalable RANK Algorithm, for feature selection in 
 
 ## Description
 
-All the theoretical details are presented inside the article above. We implemented the RANK and SRANK algorithm following its indications.
+All the theoretical details are presented inside the article above. I've implemented the RANK and SRANK algorithm following its indications.
 
 ## Dependencies
 * ```pandas v1.0.1```
