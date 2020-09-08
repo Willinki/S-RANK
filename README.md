@@ -2,12 +2,13 @@
 
 ![](https://img.shields.io/github/license/Willinki/S-RANK?color=blue&style=flat-square)
 ![](https://img.shields.io/pypi/v/S-RANK?color=green&style=flat-square)
+[![Downloads](https://pepy.tech/badge/s-rank)](https://pepy.tech/project/s-rank)
 
 A basic implementation of the Scalable RANK Algorithm, for feature selection in unsupervised learning problems, as described [in this article](https://www.public.asu.edu/%7Ehuanliu/papers/pakdd00clu.pdf "Feature Selection for Clustering") by Manoranjan Dash and Huan Liu.
 
 ## Description
 
-All the theoretical details are presented inside the article above. We implemented the RANK and SRANK algorithm following its indications.
+All the theoretical details are presented inside the article above. I've implemented the RANK and SRANK algorithm following its indications.
 
 ## Dependencies
 * ```pandas v1.0.1```
@@ -30,7 +31,7 @@ Then, in order to use the algorithm:
   ranker.apply(df_big, vars_type, discrete_var_list = None, clean_bool = False, rescale_bool = False, 
                N_SAMPLE = 40, SAMPLE_SIZE = 50)
   ```
-  
+
 __Arguments:__
 * ```df_big```: The entire dataframe to be analyzed. It has to be a pandas.Dataframe object. Please make sure that all variable dtypes are inferred correctly. It is important to have numeric variables and non-numeric variables (dtype: object) inferred correctly. Up to now, the algorithm is able to handle numeric and object data, any other type (like datetimes) will not be treated. It is recommended to remove any non-numerical and non-object feature.
 * ```vars_type``` :  the type of data in the dataframe. String that can take 3 values: ```continous``` if all the variables have continous numerical values. ```discrete``` if all the variables are categorical (encoded as string or number makes no difference), ```mixed``` if there's both.
@@ -40,6 +41,10 @@ __Arguments:__
 * ```N_SAMPLE``` : The S-RANK algorithm takes random samples of the dataset. This parameter is the number of samples to be taken. It is recommended to use at least 35.
 * ```SAMPLE_SIZE``` : The number of rows to include in each sample. It is recommended to use at least 0.25% of the dataset in each sample. If possible, tale samples of at least 1% of the total dataset.
 
+Lastly, there are two ways to use the results:
+  * ```ranker.info``` is a pandas.Dataframe containing the score obtained by each feature. The higher the score, the more important is the feature.
+  * ```ranker.score``` is a list containing the features in order of importance. More important features first.
+  
 ## Reference
 Dash, M., & Liu, H. (2000). Feature selection for clustering. In Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics) (Vol. 1805, pp. 110-121). (Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics); Vol. 1805). Springer Verlag. 
 
