@@ -152,10 +152,10 @@ class dataframe_ext:
     #                                       #
     #########################################
     def discretize(self):
-        disc = preprocessing.KBinsDiscretizer(n_bins = 10, 
-                                              encode = "ordinal", 
-                                              strategy = "uniform")
-        continous_df = self.df[self.continous_vars]
+        disc = preprocessing.KBinsDiscretizer(n_bins = 10,                   # Watch here: you might have to tweak this parameter a bit
+                                              encode = "ordinal",            # I'm currently looking for a way to make this process automatic
+                                              strategy = "uniform")          # If the data is standardized and rescaled though, 10 might be a good 
+        continous_df = self.df[self.continous_vars]                          # first attempt
         not_continous_df = self.df.drop(columns = self.continous_vars)
         continous_df = pd.DataFrame(
                                         disc.fit_transform(continous_df), 
